@@ -1,7 +1,7 @@
 {
   "name": "dev-dup-protect",
   "displayName": "Duplicate Development Guard",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Detects duplicate or overlapping development work across the Linear backlog and GitHub branches/PRs. Adds /dup-check, /backlog-add and /start-task commands, a duplicate-detector agent, and a hook that blocks Linear issue creation until a duplicate check has been run.",
   "author": {
     "name": "umiji"
