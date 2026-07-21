@@ -3,7 +3,7 @@ description: これから作る機能・タスクの重複をLinearバックロ�
 argument-hint: <機能・タスクの説明>
 ---
 
-You are running CortexLab Dup Guard's pre-development duplicate check.
+You are running Duplicate Development Guard's pre-development duplicate check.
 
 Target feature/task description:
 
@@ -16,7 +16,7 @@ $ARGUMENTS
 1. If the description above is empty, ask the user (in Japanese) what feature
    or task they want to check, then continue with their answer.
 2. Launch the `duplicate-detector` subagent from this plugin
-   (cortexlab-dup-guard) via the Agent tool. Pass it: the task description,
+   (dev-dup-protect) via the Agent tool. Pass it: the task description,
    the current repository's default branch name, and any extra context the
    user gave (component names, related issue IDs). Do NOT investigate
    yourself in this session — the subagent does the searching.
@@ -35,7 +35,7 @@ $ARGUMENTS
    a check that did not actually happen.
 5. Close with next-step guidance:
    - 🟢 → そのままLinear登録・着手してよい旨を伝える(希望があれば
-     `/cortexlab-dup-guard:backlog-add` で登録できることを案内)。
+     `/dev-dup-protect:backlog-add` で登録できることを案内)。
    - 🟡 → 類似Issueの担当者・ステータスを示し、分担相談または既存Issueへの
      合流を提案する。
    - 🔴 → 新規登録・着手を止めることを明確に推奨し、既存のIssue/ブランチに

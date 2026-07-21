@@ -1,6 +1,6 @@
-# CortexLab Dup Guard — セットアップ & 使い方ガイド
+# Duplicate Development Guard — セットアップ & 使い方ガイド
 
-CortexLabの共同開発で、**同じ機能を別々に作ってしまう手戻り**を防ぐための
+チームの共同開発で、**同じ機能を別々に作ってしまう手戻り**を防ぐための
 Claude Codeプラグインです。バックログ登録や開発着手の**前**に、Linearの
 バックログとGitHubのブランチ/PRを自動で横断チェックし、重複・類似があれば
 アラートを出します。
@@ -29,9 +29,9 @@ Claude Codeプラグインです。バックログ登録や開発着手の**前*
 ## 事前に必要なもの
 
 - **Claude Code** が使えること(あなたのアカウントで `claude` が起動できる)
-- **git** が入っていて、CortexLabのリポジトリを `git clone` 済みで、普段
+- **git** が入っていて、対象リポジトリを `git clone` 済みで、普段
   `git push/pull` できていること(GitHubの認証が通っている状態)
-- Linearのアカウント(CortexLabのワークスペースに入っていること)
+- Linearのアカウント(対象のLinearワークスペースに参加していること)
 
 > `gh` CLI や GitHub MCP は**任意**です。あればPR情報も見ますが、無くても
 > ブランチ検索は動きます。
@@ -62,7 +62,7 @@ claude mcp add --transport http linear https://mcp.linear.app/mcp
 
 > **スコープの注意**: 上のコマンドは実行したプロジェクトに紐づきます。
 > 全プロジェクトで使いたいなら `--scope user` を付けてください。
-> CortexLab専用でよければ、CortexLabのリポジトリ内で実行するのがおすすめです。
+> 対象プロジェクト専用でよければ、そのリポジトリ内で実行するのがおすすめです。
 
 ### 手順2. プラグインをインストールする
 
@@ -70,7 +70,7 @@ claude mcp add --transport http linear https://mcp.linear.app/mcp
 
 ```
 /plugin marketplace add umiji/co-dev-support-plugins
-/plugin install cortexlab-dup-guard@cortexlab-tools
+/plugin install dev-dup-protect@co-dev-tools
 ```
 
 > - スラッシュコマンドは、ターミナルではなく **Claude Code のセッション内**で
@@ -78,16 +78,16 @@ claude mcp add --transport http linear https://mcp.linear.app/mcp
 > - `/plugin marketplace add` はデフォルトブランチを読みます。まだmainに
 >   マージ前の場合は、リポジトリをローカルにcloneして
 >   `/plugin marketplace add /path/to/repo` でローカル追加してください。
-> - CortexLab本体のリポジトリにプラグインを移設した場合は、
+> - プラグインを別のリポジトリに移設した場合は、
 >   `umiji/co-dev-support-plugins` の部分をそのリポジトリ(`<owner>/<repo>`)に
 >   置き換えてください。
 
 ### 手順3. 動作確認
 
-CortexLabのリポジトリ内でClaude Codeを起動し、次を実行:
+対象リポジトリ内でClaude Codeを起動し、次を実行:
 
 ```
-/cortexlab-dup-guard:dup-check 動作確認用のダミー機能
+/dev-dup-protect:dup-check 動作確認用のダミー機能
 ```
 
 Linearとブランチを検索したレポート(🔴/🟡/🟢)が返ってくれば成功です。
@@ -96,13 +96,13 @@ Linearとブランチを検索したレポート(🔴/🟡/🟢)が返ってく�
 
 ## 普段の使い方
 
-いつも **CortexLabのリポジトリ内でClaude Codeを起動**してから使ってください
+いつも **対象リポジトリ内でClaude Codeを起動**してから使ってください
 (見るブランチ = 起動したリポジトリ、のため)。
 
 ### A. バックログを登録するとき → `/backlog-add`
 
 ```
-/cortexlab-dup-guard:backlog-add 通知機能のメール送信対応
+/dev-dup-protect:backlog-add 通知機能のメール送信対応
 ```
 
 1. Linearの類似Issue・GitHubの類似ブランチを検索してレポート
@@ -116,7 +116,7 @@ Linearとブランチを検索したレポート(🔴/🟡/🟢)が返ってく�
 ### B. 開発に着手するとき → `/start-task`
 
 ```
-/cortexlab-dup-guard:start-task CTX-42
+/dev-dup-protect:start-task CTX-42
 ```
 
 (Issue IDでも、機能の説明文でもOK)
@@ -131,7 +131,7 @@ Linearとブランチを検索したレポート(🔴/🟡/🟢)が返ってく�
 ### C. とりあえず重複だけ確認したいとき → `/dup-check`
 
 ```
-/cortexlab-dup-guard:dup-check 検索のインクリメンタル化
+/dev-dup-protect:dup-check 検索のインクリメンタル化
 ```
 
 チェックとレポートのみ(Issue登録はしません)。
@@ -181,8 +181,8 @@ DUP_GUARD_DISABLE=1 claude
 | 症状 | 対処 |
 | --- | --- |
 | レポートに「Linear MCP未接続」と出る | 手順1をやり直し。`claude mcp list` で `linear` を確認 |
-| `/cortexlab-dup-guard:...` が候補に出ない | `/plugin` でインストール状態を確認。手順2を再実行 |
-| ブランチが検索されない | CortexLabのリポジトリ**内**でClaude Codeを起動しているか確認 |
+| `/dev-dup-protect:...` が候補に出ない | `/plugin` でインストール状態を確認。手順2を再実行 |
+| ブランチが検索されない | 対象リポジトリ**内**でClaude Codeを起動しているか確認 |
 | 「fetch失敗」と注記される | `git fetch` が通るか(認証・ネットワーク)を確認 |
 | Linear作成がブロックされる | 仕様どおり。先に `/dup-check` か `/backlog-add` を通す |
 | フックが自分のLinearツールに反応しない | サーバー名を変えて登録している場合、`hooks/hooks.json` の matcher を調整 |

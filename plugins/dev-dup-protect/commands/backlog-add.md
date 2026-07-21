@@ -3,7 +3,7 @@ description: 重複チェックを通してからLinearにバックログ(Issue)
 argument-hint: <登録したい機能・タスクの説明>
 ---
 
-You are running CortexLab Dup Guard's checked backlog registration: verify
+You are running Duplicate Development Guard's checked backlog registration: verify
 there is no duplicate work, then create the Linear issue.
 
 Requested backlog item:
@@ -17,7 +17,7 @@ $ARGUMENTS
 1. If the description above is empty, ask the user (in Japanese) what they
    want to register, then continue with their answer.
 2. Launch the `duplicate-detector` subagent from this plugin
-   (cortexlab-dup-guard) via the Agent tool with the task description and
+   (dev-dup-protect) via the Agent tool with the task description and
    current repository context. Do not skip this even if the user sounds
    confident the feature is new.
 3. Present the subagent's report (alert level, findings, recommendation) to

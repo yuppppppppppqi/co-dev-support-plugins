@@ -2,7 +2,7 @@
 
 ## What this is
 
-A Claude Code plugin marketplace repository for CortexLab's collaborative
+A Claude Code plugin marketplace repository for collaborative
 development tooling. `.claude-plugin/marketplace.json` is the marketplace
 manifest; each plugin lives self-contained under `plugins/<name>/`.
 
@@ -10,9 +10,9 @@ manifest; each plugin lives self-contained under `plugins/<name>/`.
 
 1. **Plugins are self-contained.** A plugin under `plugins/<name>/` must not
    depend on files outside its own directory — it needs to work if copied
-   into another repository (e.g. CortexLab's own repo) on its own.
+   into another repository on its own.
 2. **Agents stay read-only unless a command's flow explicitly writes.**
-   `duplicate-detector` (cortexlab-dup-guard) only investigates and reports;
+   `duplicate-detector` (dev-dup-protect) only investigates and reports;
    Linear/GitHub writes happen only in the command-level flow, never inside
    the investigating subagent.
 3. **Guards are mechanical, not prompt-based.** Where a plugin needs to
@@ -29,7 +29,7 @@ manifest; each plugin lives self-contained under `plugins/<name>/`.
 ```
 .claude-plugin/marketplace.json   # marketplace manifest (plugins array)
 plugins/
-  cortexlab-dup-guard/            # duplicate-development guard
+  dev-dup-protect/            # duplicate-development guard
     .claude-plugin/plugin.json
     agents/duplicate-detector.md
     commands/{dup-check,backlog-add,start-task}.md
@@ -45,14 +45,14 @@ Record decisions and insights at the end of each working session
 
 - **2026-07-21** Repository cleanup: this repo previously had Hawkeye
   (an unrelated investment-decision-system project) checked in alongside
-  the cortexlab-dup-guard plugin, from working in the same local clone.
+  the dev-dup-protect plugin, from working in the same local clone.
   Removed `hawkeye/`, `docs/`, `tests/`, `pyproject.toml`, and
   `.claude/skills/hawkeye-run/`; rewrote README.md/CLAUDE.md/.gitignore for
   this repo's actual purpose (plugin marketplace only). Hawkeye's own
   history is preserved in this repo's git log (commits before
   `b665725`) but is no longer relevant to future work here.
-- **2026-07-20** Added `plugins/cortexlab-dup-guard/` + root
-  `.claude-plugin/marketplace.json` — a Claude Code plugin for CortexLab
+- **2026-07-20** Added `plugins/dev-dup-protect/` + root
+  `.claude-plugin/marketplace.json` — a Claude Code plugin
   that detects duplicate development across the Linear backlog and GitHub
   branches (duplicate-detector agent, `/dup-check` `/backlog-add`
   `/start-task` commands, PreToolUse hook gating Linear issue creation on a

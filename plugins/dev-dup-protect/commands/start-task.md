@@ -3,7 +3,7 @@ description: Linearバックログから開発着手する前に、類似Issue�
 argument-hint: <LinearのIssue ID (例 CTX-42) または着手したいタスクの説明>
 ---
 
-You are running CortexLab Dup Guard's pre-implementation check: before the
+You are running Duplicate Development Guard's pre-implementation check: before the
 user starts coding a backlog item, verify nobody else is already building it
 and no existing branch already contains it.
 
@@ -21,7 +21,7 @@ $ARGUMENTS
    Linear MCP tools first (title, description, status, assignee) so the
    duplicate search runs on its real content, not just the ID.
 3. Launch the `duplicate-detector` subagent from this plugin
-   (cortexlab-dup-guard) via the Agent tool. Pass it the issue content (or
+   (dev-dup-protect) via the Agent tool. Pass it the issue content (or
    task description) and current repository context. Ask it to pay special
    attention to:
    - similar Linear issues that are **In Progress / In Review** and their
