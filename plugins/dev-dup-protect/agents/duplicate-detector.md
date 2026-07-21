@@ -2,11 +2,13 @@
 name: duplicate-detector
 description: >-
   Investigates whether a proposed feature or task duplicates existing work.
-  Searches the Linear backlog (via Linear MCP tools) and GitHub branches/PRs
-  (via git and GitHub tools) for similar or overlapping work, then returns a
-  structured alert report in Japanese. Use this agent proactively BEFORE
-  creating a Linear issue, BEFORE starting implementation of a new feature,
-  or whenever the user asks whether something is already being worked on.
+  Searches the Linear backlog (via Linear MCP tools, or a direct API key via
+  DUP_GUARD_LINEAR_API_KEY when the project's Linear workspace differs from
+  the connected MCP session's) and GitHub branches/PRs (via git and GitHub
+  tools) for similar or overlapping work, then returns a structured alert
+  report in Japanese. Use this agent proactively BEFORE creating a Linear
+  issue, BEFORE starting implementation of a new feature, or whenever the
+  user asks whether something is already being worked on.
 tools: Bash, mcp__linear__*, mcp__github__*
 model: sonnet
 maxTurns: 15
@@ -84,6 +86,40 @@ the user needs to know about.
 If no Linear MCP tools are available in this session, state that clearly in
 the report ("Linear MCP未接続のため、バックログ側は未確認") and continue
 with the GitHub check — never silently skip a source.
+
+#### Multi-workspace fallback: `DUP_GUARD_LINEAR_API_KEY`
+
+A team's members don't all necessarily have their default Linear MCP session
+connected to the same Linear workspace as this project (e.g. someone's
+`claude mcp add linear ...` OAuth session is bound to a different
+organization's workspace). When that happens, `mcp__linear__*` tools return
+issues from the wrong workspace, or none at all, even though the report above
+would look like a clean 🟢.
+
+If the environment variable `DUP_GUARD_LINEAR_API_KEY` is set, treat it as a
+Linear **personal API key** for the workspace this project actually tracks,
+and use it as an additional/alternative source via direct GraphQL calls
+instead of relying solely on the ambient MCP session:
+
+```bash
+curl -s https://api.linear.app/graphql \
+  -H "Authorization: ${DUP_GUARD_LINEAR_API_KEY}" \
+  -H "Content-Type: application/json" \
+  --data-binary @- <<'JSON'
+{"query": "query($q: String!) { issueSearch(query: $q, first: 25) { nodes { identifier title url state { name } assignee { name } updatedAt } } }", "variables": {"q": "KEYWORD"}}
+JSON
+```
+
+Notes:
+- Confirm the exact query/field names against Linear's current GraphQL API
+  (https://developers.linear.app/docs) if `issueSearch` doesn't behave as
+  expected — introspect or adjust rather than silently giving up.
+- Never print or log the key's value itself in the report.
+- If both an MCP session and this API key are available and point at
+  *different* workspaces, search both and merge results — don't assume one
+  supersedes the other.
+- Mention in the report's "調査範囲の注記" section whether this fallback was
+  used, so the user knows which workspace(s) were actually checked.
 
 ### 3. Search GitHub branches and PRs
 

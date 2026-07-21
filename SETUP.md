@@ -94,6 +94,35 @@ Linearとブランチを検索したレポート(🔴/🟡/🟢)が返ってく�
 
 ---
 
+## 相方と別のLinearワークスペースにいる場合(APIキー フォールバック)
+
+`claude mcp add --transport http linear ...` で繋がるLinear MCPセッションは、
+**そのとき認証したLinearアカウント/ワークスペース**に固定されます。もし
+あなたの普段のLinear MCP接続がこのプロジェクトのワークスペースとは別の
+ワークスペースに向いている場合(例: 普段使いのワークスペースと、この
+プロジェクトのチームのワークスペースが別)、MCP経由では正しいバックログが
+検索できません。
+
+その場合は、**このプロジェクト用のLinearワークスペースに対する
+Personal API key** を環境変数 `DUP_GUARD_LINEAR_API_KEY` にセットしてください。
+duplicate-detectorサブエージェントは、これが設定されていればLinearの
+GraphQL APIを直接叩いてこのワークスペースのIssueも検索します
+(MCPセッションと両方設定されていれば両方を検索してマージします)。
+
+```bash
+# Linearの Settings → API → Personal API keys で発行したキーを使う
+export DUP_GUARD_LINEAR_API_KEY="lin_api_xxxxxxxx"
+claude
+```
+
+- キーは `.env` などGit管理外のファイルに置くか、シェルで都度exportしてください。
+  **絶対にリポジトリにコミットしないこと**(このリポジトリの `.gitignore` は
+  `.env` を除外済みです)。
+- レポートの「調査範囲の注記」に、このフォールバックを使ったかどうかが
+  明記されます。
+
+---
+
 ## 普段の使い方
 
 いつも **対象リポジトリ内でClaude Codeを起動**してから使ってください
@@ -181,6 +210,7 @@ DUP_GUARD_DISABLE=1 claude
 | 症状 | 対処 |
 | --- | --- |
 | レポートに「Linear MCP未接続」と出る | 手順1をやり直し。`claude mcp list` で `linear` を確認 |
+| Linearの検索結果が0件/明らかに違うIssueばかり | MCPセッションが別ワークスペースに繋がっている可能性。上記「相方と別のLinearワークスペースにいる場合」を参照し `DUP_GUARD_LINEAR_API_KEY` を設定 |
 | `/dev-dup-protect:...` が候補に出ない | `/plugin` でインストール状態を確認。手順2を再実行 |
 | ブランチが検索されない | 対象リポジトリ**内**でClaude Codeを起動しているか確認 |
 | 「fetch失敗」と注記される | `git fetch` が通るか(認証・ネットワーク)を確認 |

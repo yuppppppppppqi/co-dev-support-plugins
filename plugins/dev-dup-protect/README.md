@@ -68,6 +68,10 @@ Linearのバックログと GitHub のブランチ/PR を横断検索し、
 
 ## 調整ポイント
 
+- **別ワークスペースのLinearも検索したい場合**: 環境変数
+  `DUP_GUARD_LINEAR_API_KEY` に、そのワークスペースのPersonal API keyを
+  セットすると、接続中のLinear MCPセッション(別ワークスペース)に加えて
+  直接GraphQL APIでも検索します。詳細は [SETUP.md](../../SETUP.md) 参照
 - **ガードの一時無効化**: 環境変数 `DUP_GUARD_DISABLE=1`
 - **有効期限**: `hooks/dup-guard.sh` の `TTL_SECONDS`(既定 2700 = 45分)
 - **フックの対象ツール**: `hooks/hooks.json` の `matcher`
