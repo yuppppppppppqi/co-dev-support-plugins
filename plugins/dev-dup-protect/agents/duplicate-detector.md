@@ -106,13 +106,15 @@ curl -s https://api.linear.app/graphql \
   -H "Authorization: ${DUP_GUARD_LINEAR_API_KEY}" \
   -H "Content-Type: application/json" \
   --data-binary @- <<'JSON'
-{"query": "query($q: String!) { issueSearch(query: $q, first: 25) { nodes { identifier title url state { name } assignee { name } updatedAt } } }", "variables": {"q": "KEYWORD"}}
+{"query": "query($term: String!) { searchIssues(term: $term, first: 25) { nodes { identifier title url state { name } assignee { name } updatedAt } } }", "variables": {"term": "KEYWORD"}}
 JSON
 ```
 
+(Verified directly against Linear's API: the older `issueSearch(query: ...)` field is deprecated and now errors — `searchIssues(term: ...)` is the current replacement.)
+
 Notes:
 - Confirm the exact query/field names against Linear's current GraphQL API
-  (https://developers.linear.app/docs) if `issueSearch` doesn't behave as
+  (https://developers.linear.app/docs) if `searchIssues` doesn't behave as
   expected — introspect or adjust rather than silently giving up.
 - Never print or log the key's value itself in the report.
 - If both an MCP session and this API key are available and point at
