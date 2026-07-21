@@ -7,6 +7,5 @@
     "name": "umiji"
   },
   "license": "MIT",
-  "keywords": ["linear", "github", "duplicate-detection", "backlog", "team-workflow"],
-  "hooks": "./hooks/hooks.json"
+  "keywords": ["linear", "github", "duplicate-detection", "backlog", "team-workflow"]
 }
